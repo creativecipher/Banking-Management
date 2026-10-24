@@ -1,0 +1,138 @@
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+  <h1 class="h3 mb-0">Customers</h1>
+  <a routerLink="/customers/new" class="btn btn-primary">
+    <i class="bi bi-person-plus me-1"></i> New Customer
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body border-bottom">
+    <div class="row g-2">
+      <div class="col-12 col-md-8">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input
+            type="search"
+            class="form-control"
+            placeholder="Search name, email, phone, address…"
+            aria-label="Search customers"
+            [formControl]="searchControl"
+          />
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <select class="form-select" aria-label="Filter by status" [formControl]="statusControl">
+          <option value="ALL">All statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (error(); as message) {
+    <div class="alert alert-danger m-3 d-flex align-items-center justify-content-between" role="alert">
+      <span>{{ message }}</span>
+      <button type="button" class="btn btn-sm btn-outline-danger" (click)="retry()">Retry</button>
+    </div>
+  } @else {
+    <div class="table-responsive position-relative">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of customers(); track c.id) {
+            <tr>
+              <td class="small text-nowrap">{{ formatId(c.id) }}</td>
+              <td>
+                <a [routerLink]="['/customers', c.id]" class="text-decoration-none fw-semibold">
+                  {{ c.firstName }} {{ c.lastName }}
+                </a>
+              </td>
+              <td class="small">{{ c.email }}</td>
+              <td class="small">{{ c.phone }}</td>
+              <td class="small text-nowrap">{{ c.createdAt | date: 'dd MMM yyyy' }}</td>
+              <td>
+                <span [class]="c.status === 'ACTIVE' ? 'badge text-bg-success' : 'badge text-bg-secondary'">
+                  {{ c.status }}
+                </span>
+              </td>
+              <td class="text-end text-nowrap">
+                <a [routerLink]="['/customers', c.id]" class="btn btn-sm btn-outline-secondary me-1" aria-label="View">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a [routerLink]="['/customers', c.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" aria-label="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <button
+                  type="button"
+                  [class]="c.status === 'ACTIVE' ? 'btn btn-sm btn-outline-danger' : 'btn btn-sm btn-outline-success'"
+                  [attr.aria-label]="c.status === 'ACTIVE' ? 'Deactivate' : 'Reactivate'"
+                  (click)="askToggle(c)"
+                >
+                  <i [class]="c.status === 'ACTIVE' ? 'bi bi-person-dash' : 'bi bi-person-check'"></i>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            @if (!loading()) {
+              <tr>
+                <td colspan="7" class="text-center text-muted py-5">
+                  <i class="bi bi-people fs-1"></i>
+                  <p class="mb-0 mt-2">No customers match your search.</p>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+
+      @if (loading()) {
+        <div class="text-center text-muted py-4">
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          Loading customers…
+        </div>
+      }
+    </div>
+
+    <div class="card-footer bg-white d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <span class="small text-muted">
+        Showing {{ rangeStart() }}–{{ rangeEnd() }} of {{ total() }}
+      </span>
+      <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="page() <= 1 || loading()" (click)="previousPage()">
+          <i class="bi bi-chevron-left"></i> Previous
+        </button>
+        <span class="btn btn-sm btn-outline-secondary disabled">Page {{ page() }} of {{ totalPages() }}</span>
+        <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="page() >= totalPages() || loading()" (click)="nextPage()">
+          Next <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  }
+</div>
+
+@if (pendingToggle(); as c) {
+  <app-confirm-dialog
+    [title]="c.status === 'ACTIVE' ? 'Deactivate customer?' : 'Reactivate customer?'"
+    [message]="
+      c.status === 'ACTIVE'
+        ? 'Deactivate ' + c.firstName + ' ' + c.lastName + '? Their record is kept, but they will be marked inactive.'
+        : 'Reactivate ' + c.firstName + ' ' + c.lastName + '?'
+    "
+    [confirmLabel]="c.status === 'ACTIVE' ? 'Deactivate' : 'Reactivate'"
+    [confirmClass]="c.status === 'ACTIVE' ? 'btn-danger' : 'btn-success'"
+    [busy]="toggling()"
+    (confirmed)="confirmToggle()"
+    (cancelled)="cancelToggle()"
+  />
+}

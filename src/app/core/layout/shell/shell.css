@@ -1,0 +1,23 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1030;
+}
+
+.app-main {
+  min-height: 100vh;
+}
+
+.app-content {
+  padding: 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .app-main {
+    margin-left: var(--bank-sidebar-width);
+  }
+  .backdrop {
+    display: none;
+  }
+}

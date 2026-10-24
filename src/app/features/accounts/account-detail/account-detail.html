@@ -1,0 +1,100 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">Account Details</h1>
+  <a routerLink="/accounts" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to list
+  </a>
+</div>
+
+@if (error(); as message) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="retry()">Retry</button>
+  </div>
+} @else if (loading()) {
+  <div class="text-muted py-4">
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Loading account…
+  </div>
+} @else if (account(); as a) {
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div>
+        <span class="fw-semibold fs-5 font-monospace">{{ a.accountNumber }}</span>
+        <span class="text-muted small ms-2">{{ typeLabels[a.accountType] }} account</span>
+      </div>
+      <app-account-status-badge [status]="a.status" />
+    </div>
+
+    <div class="card-body">
+      <div class="p-3 mb-3 rounded bg-light">
+        <div class="text-muted small">Current balance (simulated)</div>
+        <div class="display-6 fw-semibold">{{ a.currentBalanceMinor | money: a.currency }}</div>
+      </div>
+
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Customer</dt>
+        <dd class="col-sm-9">
+          <a [routerLink]="['/customers', a.customerId]" class="text-decoration-none">
+            @if (a.customer; as owner) { {{ owner.firstName }} {{ owner.lastName }} }
+            @else { Customer #{{ a.customerId }} }
+          </a>
+          <span class="text-muted small ms-1">({{ formatId(a.customerId) }})</span>
+        </dd>
+
+        <dt class="col-sm-3">Nickname</dt>
+        <dd class="col-sm-9">{{ a.nickname || '—' }}</dd>
+
+        <dt class="col-sm-3">Currency</dt>
+        <dd class="col-sm-9">{{ a.currency }}</dd>
+
+        <dt class="col-sm-3">Opening balance</dt>
+        <dd class="col-sm-9">{{ a.openingBalanceMinor | money: a.currency }}</dd>
+
+        <dt class="col-sm-3">Opened</dt>
+        <dd class="col-sm-9 mb-0">{{ a.openedAt | date: 'dd MMM yyyy, HH:mm' }}</dd>
+      </dl>
+    </div>
+
+    <div class="card-footer bg-white d-flex flex-wrap justify-content-end gap-2">
+      @for (action of visibleActions(); track action.target) {
+        @if (blockReason(action.target); as reason) {
+          <span class="small text-muted align-self-center me-auto">{{ action.label }} unavailable: {{ reason }}</span>
+        }
+      }
+      @if (a.status !== 'INACTIVE') {
+        <a [routerLink]="['/accounts', a.id, 'edit']" class="btn btn-outline-primary">
+          <i class="bi bi-pencil me-1"></i> Edit
+        </a>
+      }
+      @for (action of visibleActions(); track action.target) {
+        <button
+          type="button"
+          [class]="'btn ' + action.buttonClass"
+          [disabled]="blockReason(action.target) !== null"
+          (click)="pendingAction.set(action)"
+        >
+          <i [class]="'bi ' + action.icon + ' me-1'"></i> {{ action.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="card shadow-sm mt-3">
+    <div class="card-header bg-white fw-semibold">Recent Transactions</div>
+    <div class="card-body text-center text-muted py-4">
+      The transaction ledger arrives in Phase 5.
+    </div>
+  </div>
+}
+
+@if (pendingAction(); as action) {
+  <app-confirm-dialog
+    [title]="action.title"
+    [message]="action.message"
+    [confirmLabel]="action.label"
+    [confirmClass]="action.dialogClass"
+    [busy]="working()"
+    (confirmed)="confirmAction()"
+    (cancelled)="pendingAction.set(null)"
+  />
+}

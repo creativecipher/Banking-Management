@@ -1,0 +1,149 @@
+{
+  "customers": [
+    {
+      "id": 1,
+      "firstName": "Aarav",
+      "lastName": "Sharma",
+      "email": "aarav.sharma@example.com",
+      "phone": "9000000001",
+      "address": "12 Demo Street, Pune, Maharashtra 411001",
+      "dateOfBirth": "1988-03-14",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-05T04:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "firstName": "Diya",
+      "lastName": "Patel",
+      "email": "diya.patel@example.com",
+      "phone": "9000000002",
+      "address": "45 Sample Road, Ahmedabad, Gujarat 380001",
+      "dateOfBirth": "1992-07-21",
+      "status": "ACTIVE",
+      "createdAt": "2026-01-12T05:10:00.000Z"
+    },
+    {
+      "id": 3,
+      "firstName": "Vivaan",
+      "lastName": "Reddy",
+      "email": "vivaan.reddy@example.com",
+      "phone": "9000000003",
+      "address": "7 Test Avenue, Hyderabad, Telangana 500001",
+      "dateOfBirth": "1985-11-02",
+      "status": "ACTIVE",
+      "createdAt": "2026-02-03T06:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "firstName": "Ananya",
+      "lastName": "Iyer",
+      "email": "ananya.iyer@example.com",
+      "phone": "9000000004",
+      "address": "88 Mock Lane, Chennai, Tamil Nadu 600001",
+      "dateOfBirth": "1995-05-30",
+      "status": "INACTIVE",
+      "createdAt": "2026-02-18T07:45:00.000Z"
+    },
+    {
+      "id": 5,
+      "firstName": "Kabir",
+      "lastName": "Singh",
+      "email": "kabir.singh@example.com",
+      "phone": "9000000005",
+      "address": "3 Fiction Park, Jaipur, Rajasthan 302001",
+      "dateOfBirth": "1979-09-09",
+      "status": "ACTIVE",
+      "createdAt": "2026-03-01T08:20:00.000Z"
+    },
+    {
+      "id": 6,
+      "firstName": "Isha",
+      "lastName": "Nair",
+      "email": "isha.nair@example.com",
+      "phone": "9000000006",
+      "address": "21 Placeholder Nagar, Kochi, Kerala 682001",
+      "dateOfBirth": "1990-12-25",
+      "status": "ACTIVE",
+      "createdAt": "2026-03-15T09:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "firstName": "Reyansh",
+      "lastName": "Gupta",
+      "email": "reyansh.gupta@example.com",
+      "phone": "9000000007",
+      "address": "56 Sandbox Colony, Lucknow, Uttar Pradesh 226001",
+      "dateOfBirth": "1983-04-17",
+      "status": "ACTIVE",
+      "createdAt": "2026-04-02T04:15:00.000Z"
+    },
+    {
+      "id": 8,
+      "firstName": "Meera",
+      "lastName": "Joshi",
+      "email": "meera.joshi@example.com",
+      "phone": "9000000008",
+      "address": "9 Example Chowk, Nagpur, Maharashtra 440001",
+      "dateOfBirth": "1998-08-08",
+      "status": "ACTIVE",
+      "createdAt": "2026-04-20T10:30:00.000Z"
+    },
+    {
+      "id": 9,
+      "firstName": "Arjun",
+      "lastName": "Mehta",
+      "email": "arjun.mehta@example.com",
+      "phone": "9000000009",
+      "address": "34 Dummy Society, Surat, Gujarat 395001",
+      "dateOfBirth": "1975-01-19",
+      "status": "INACTIVE",
+      "createdAt": "2026-05-06T11:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "firstName": "Saanvi",
+      "lastName": "Das",
+      "email": "saanvi.das@example.com",
+      "phone": "9000000010",
+      "address": "17 Demo Bagh, Kolkata, West Bengal 700001",
+      "dateOfBirth": "1993-06-11",
+      "status": "ACTIVE",
+      "createdAt": "2026-05-22T05:05:00.000Z"
+    },
+    {
+      "id": 11,
+      "firstName": "Vihaan",
+      "lastName": "Kulkarni",
+      "email": "vihaan.kulkarni@example.com",
+      "phone": "9000000011",
+      "address": "62 Sample Peth, Pune, Maharashtra 411002",
+      "dateOfBirth": "1987-10-03",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-10T06:40:00.000Z"
+    },
+    {
+      "id": 12,
+      "firstName": "Kiara",
+      "lastName": "Bose",
+      "email": "kiara.bose@example.com",
+      "phone": "9000000012",
+      "address": "5 Test Gully, Bengaluru, Karnataka 560001",
+      "dateOfBirth": "1996-02-28",
+      "status": "ACTIVE",
+      "createdAt": "2026-07-01T07:25:00.000Z"
+    }
+  ],
+  "accounts": [
+    { "id": 1, "customerId": 1, "accountNumber": "ACC1000001", "accountType": "SAVINGS", "nickname": "Salary", "openingBalanceMinor": 5000000, "currentBalanceMinor": 5000000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-01-06T04:30:00.000Z" },
+    { "id": 2, "customerId": 1, "accountNumber": "ACC1000002", "accountType": "CURRENT", "openingBalanceMinor": 15000000, "currentBalanceMinor": 15000000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-02-10T05:00:00.000Z" },
+    { "id": 3, "customerId": 2, "accountNumber": "ACC1000003", "accountType": "SAVINGS", "openingBalanceMinor": 2500000, "currentBalanceMinor": 2500000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-01-20T06:15:00.000Z" },
+    { "id": 4, "customerId": 3, "accountNumber": "ACC1000004", "accountType": "SAVINGS", "openingBalanceMinor": 1000000, "currentBalanceMinor": 1000000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-02-10T07:00:00.000Z" },
+    { "id": 5, "customerId": 3, "accountNumber": "ACC1000005", "accountType": "CURRENT", "nickname": "Shop", "openingBalanceMinor": 7500000, "currentBalanceMinor": 7500000, "currency": "INR", "status": "FROZEN", "openedAt": "2026-02-12T07:30:00.000Z" },
+    { "id": 6, "customerId": 4, "accountNumber": "ACC1000006", "accountType": "SAVINGS", "openingBalanceMinor": 0, "currentBalanceMinor": 0, "currency": "INR", "status": "INACTIVE", "openedAt": "2026-02-25T08:00:00.000Z" },
+    { "id": 7, "customerId": 5, "accountNumber": "ACC1000007", "accountType": "SAVINGS", "openingBalanceMinor": 12000000, "currentBalanceMinor": 12000000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-03-05T08:45:00.000Z" },
+    { "id": 8, "customerId": 6, "accountNumber": "ACC1000008", "accountType": "SAVINGS", "openingBalanceMinor": 3000000, "currentBalanceMinor": 3000000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-03-20T09:30:00.000Z" },
+    { "id": 9, "customerId": 7, "accountNumber": "ACC1000009", "accountType": "CURRENT", "openingBalanceMinor": 20000000, "currentBalanceMinor": 20000000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-04-10T04:10:00.000Z" },
+    { "id": 10, "customerId": 8, "accountNumber": "ACC1000010", "accountType": "SAVINGS", "openingBalanceMinor": 500000, "currentBalanceMinor": 500000, "currency": "INR", "status": "ACTIVE", "openedAt": "2026-04-25T10:00:00.000Z" },
+    { "id": 11, "customerId": 10, "accountNumber": "ACC1000011", "accountType": "SAVINGS", "openingBalanceMinor": 0, "currentBalanceMinor": 0, "currency": "INR", "status": "INACTIVE", "openedAt": "2026-05-30T05:30:00.000Z" }
+  ]
+}

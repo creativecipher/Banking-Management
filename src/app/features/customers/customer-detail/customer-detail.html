@@ -1,0 +1,117 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">Customer Details</h1>
+  <a routerLink="/customers" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to list
+  </a>
+</div>
+
+@if (error(); as message) {
+  <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="retry()">Retry</button>
+  </div>
+} @else if (loading()) {
+  <div class="text-muted py-4">
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Loading customer…
+  </div>
+} @else if (customer(); as c) {
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div>
+        <span class="fw-semibold fs-5">{{ c.firstName }} {{ c.lastName }}</span>
+        <span class="text-muted small ms-2">{{ formatId(c.id) }}</span>
+      </div>
+      <span [class]="c.status === 'ACTIVE' ? 'badge text-bg-success' : 'badge text-bg-secondary'">
+        {{ c.status }}
+      </span>
+    </div>
+
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">{{ c.email }}</dd>
+
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9">{{ c.phone }}</dd>
+
+        <dt class="col-sm-3">Date of birth</dt>
+        <dd class="col-sm-9">{{ c.dateOfBirth | date: 'dd MMM yyyy' }}</dd>
+
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">{{ c.address }}</dd>
+
+        <dt class="col-sm-3">Customer since</dt>
+        <dd class="col-sm-9 mb-0">{{ c.createdAt | date: 'dd MMM yyyy, HH:mm' }}</dd>
+      </dl>
+    </div>
+
+    <div class="card-footer bg-white d-flex justify-content-end gap-2">
+      <a [routerLink]="['/customers', c.id, 'edit']" class="btn btn-outline-primary">
+        <i class="bi bi-pencil me-1"></i> Edit
+      </a>
+      <button
+        type="button"
+        [class]="c.status === 'ACTIVE' ? 'btn btn-outline-danger' : 'btn btn-outline-success'"
+        (click)="confirming.set(true)"
+      >
+        {{ c.status === 'ACTIVE' ? 'Deactivate' : 'Reactivate' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mt-3">
+    <div class="card-header bg-white d-flex align-items-center justify-content-between">
+      <span class="fw-semibold">Accounts</span>
+      @if (c.status === 'ACTIVE') {
+        <a routerLink="/accounts/new" [queryParams]="{ customerId: c.id }" class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg me-1"></i> Open account
+        </a>
+      }
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Account No.</th>
+            <th>Type</th>
+            <th class="text-end">Balance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of accounts(); track a.id) {
+            <tr>
+              <td class="font-monospace small">
+                <a [routerLink]="['/accounts', a.id]" class="text-decoration-none fw-semibold">{{ a.accountNumber }}</a>
+              </td>
+              <td class="small">{{ typeLabels[a.accountType] }}</td>
+              <td class="text-end">{{ a.currentBalanceMinor | money: a.currency }}</td>
+              <td><app-account-status-badge [status]="a.status" /></td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="text-center text-muted py-4">This customer has no accounts yet.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (confirming()) {
+    <app-confirm-dialog
+      [title]="c.status === 'ACTIVE' ? 'Deactivate customer?' : 'Reactivate customer?'"
+      [message]="
+        c.status === 'ACTIVE'
+          ? 'Deactivate ' + c.firstName + ' ' + c.lastName + '? Their record is kept, but they will be marked inactive.'
+          : 'Reactivate ' + c.firstName + ' ' + c.lastName + '?'
+      "
+      [confirmLabel]="c.status === 'ACTIVE' ? 'Deactivate' : 'Reactivate'"
+      [confirmClass]="c.status === 'ACTIVE' ? 'btn-danger' : 'btn-success'"
+      [busy]="toggling()"
+      (confirmed)="confirmToggle()"
+      (cancelled)="confirming.set(false)"
+    />
+  }
+}

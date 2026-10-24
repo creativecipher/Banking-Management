@@ -1,0 +1,120 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">{{ isEdit() ? 'Edit Customer' : 'New Customer' }}</h1>
+  <a routerLink="/customers" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to list
+  </a>
+</div>
+
+@if (loadError(); as message) {
+  <div class="alert alert-danger" role="alert">{{ message }}</div>
+} @else if (loading()) {
+  <div class="text-muted py-4">
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Loading customer…
+  </div>
+} @else {
+  <div class="alert alert-info small" role="alert">
+    <i class="bi bi-info-circle me-1"></i>
+    Demo application: enter fictional data only. Never enter real identity documents or personal details.
+  </div>
+
+  <form class="card shadow-sm" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <label for="firstName" class="form-label">First name</label>
+          <input id="firstName" type="text" class="form-control" formControlName="firstName"
+                 [class.is-invalid]="showErrors(form.controls.firstName)" />
+          @if (form.controls.firstName.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['required']) { First name is required. }
+              @else if (e['minlength']) { Enter at least 2 characters. }
+              @else if (e['maxlength']) { Maximum 50 characters. }
+              @else if (e['pattern']) { Use letters, spaces, hyphens or apostrophes only. }
+            </div>
+          }
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="lastName" class="form-label">Last name</label>
+          <input id="lastName" type="text" class="form-control" formControlName="lastName"
+                 [class.is-invalid]="showErrors(form.controls.lastName)" />
+          @if (form.controls.lastName.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['required']) { Last name is required. }
+              @else if (e['minlength']) { Enter at least 2 characters. }
+              @else if (e['maxlength']) { Maximum 50 characters. }
+              @else if (e['pattern']) { Use letters, spaces, hyphens or apostrophes only. }
+            </div>
+          }
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="email" class="form-label">Email</label>
+          <input id="email" type="email" class="form-control" formControlName="email" autocomplete="off"
+                 [class.is-invalid]="showErrors(form.controls.email)" />
+          @if (form.controls.email.pending) {
+            <div class="form-text">Checking availability…</div>
+          }
+          @if (form.controls.email.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['required']) { Email is required. }
+              @else if (e['pattern']) { Enter a valid email address. }
+              @else if (e['maxlength']) { Maximum 100 characters. }
+              @else if (e['emailTaken']) { Another customer already uses this email. }
+            </div>
+          }
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="phone" class="form-label">Phone</label>
+          <input id="phone" type="tel" class="form-control" formControlName="phone" inputmode="numeric" maxlength="10"
+                 [class.is-invalid]="showErrors(form.controls.phone)" />
+          @if (form.controls.phone.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['required']) { Phone number is required. }
+              @else if (e['pattern']) { Enter a 10-digit mobile number starting with 6, 7, 8 or 9. }
+            </div>
+          }
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label for="dateOfBirth" class="form-label">Date of birth</label>
+          <input id="dateOfBirth" type="date" class="form-control" formControlName="dateOfBirth"
+                 [class.is-invalid]="showErrors(form.controls.dateOfBirth)" />
+          @if (form.controls.dateOfBirth.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['required']) { Date of birth is required. }
+              @else if (e['invalidDate']) { Enter a valid date. }
+              @else if (e['futureDate']) { Date of birth cannot be in the future. }
+              @else if (e['underAge']) { Customer must be at least 18 years old. }
+            </div>
+          }
+        </div>
+
+        <div class="col-12">
+          <label for="address" class="form-label">Address</label>
+          <textarea id="address" rows="3" class="form-control" formControlName="address"
+                    [class.is-invalid]="showErrors(form.controls.address)"></textarea>
+          @if (form.controls.address.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['required']) { Address is required. }
+              @else if (e['minlength']) { Enter at least 10 characters. }
+              @else if (e['maxlength']) { Maximum 200 characters. }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer bg-white d-flex justify-content-end gap-2">
+      <a routerLink="/customers" class="btn btn-outline-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || form.pending || saving()">
+        @if (saving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        {{ isEdit() ? 'Save changes' : 'Create customer' }}
+      </button>
+    </div>
+  </form>
+}

@@ -1,0 +1,26 @@
+<aside class="sidebar" [class.open]="open()" aria-label="Main navigation">
+  <div class="brand d-flex align-items-center gap-2 px-3 py-3">
+    <i class="bi bi-bank2 fs-3"></i>
+    <div class="lh-sm">
+      <div class="fw-bold">Demo Bank</div>
+      <div class="small opacity-75">Management Console</div>
+    </div>
+  </div>
+
+  <nav>
+    @for (section of sections; track section.heading) {
+      <div class="nav-heading">{{ section.heading }}</div>
+      @for (item of section.items; track item.path) {
+        <a
+          class="nav-link-item"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          (click)="navigated.emit()"
+        >
+          <i [class]="'bi ' + item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    }
+  </nav>
+</aside>

@@ -1,0 +1,116 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 mb-0">{{ isEdit() ? 'Edit Account' : 'Open Account' }}</h1>
+  <a routerLink="/accounts" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i> Back to list
+  </a>
+</div>
+
+@if (loadError(); as message) {
+  <div class="alert alert-danger" role="alert">{{ message }}</div>
+} @else if (loading()) {
+  <div class="text-muted py-4">
+    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+    Loading…
+  </div>
+} @else if (locked()) {
+  <div class="alert alert-warning" role="alert">
+    This account is closed and can no longer be edited.
+  </div>
+} @else {
+  @if (!isEdit()) {
+    <div class="alert alert-info small" role="alert">
+      <i class="bi bi-info-circle me-1"></i>
+      Demo application. The opening balance is simply recorded here. In a real bank it would be an
+      initial deposit processed by the server, never a value the browser decides.
+    </div>
+  }
+
+  <form class="card shadow-sm" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="card-body">
+      @if (isEdit()) {
+        @if (account(); as a) {
+          <dl class="row mb-3">
+            <dt class="col-sm-3">Account number</dt>
+            <dd class="col-sm-9 font-monospace">{{ a.accountNumber }}</dd>
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">{{ typeLabels[a.accountType] }}</dd>
+            <dt class="col-sm-3">Customer</dt>
+            <dd class="col-sm-9">{{ formatId(a.customerId) }}</dd>
+            <dt class="col-sm-3">Opened</dt>
+            <dd class="col-sm-9 mb-0">{{ a.openedAt | date: 'dd MMM yyyy, HH:mm' }}</dd>
+          </dl>
+          <hr />
+        }
+      }
+
+      <div class="row g-3">
+        @if (!isEdit()) {
+          <div class="col-12 col-md-6">
+            <label for="customerId" class="form-label">Customer</label>
+            <select id="customerId" class="form-select" formControlName="customerId"
+                    [class.is-invalid]="showErrors(form.controls.customerId)">
+              <option value="">Select a customer…</option>
+              @for (c of customers(); track c.id) {
+                <option [value]="c.id">{{ c.firstName }} {{ c.lastName }} ({{ formatId(c.id) }})</option>
+              }
+            </select>
+            @if (form.controls.customerId.errors; as e) {
+              <div class="invalid-feedback">
+                @if (e['required']) { Select a customer. }
+              </div>
+            }
+            <div class="form-text">Only active customers are listed.</div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="accountType" class="form-label">Account type</label>
+            <select id="accountType" class="form-select" formControlName="accountType">
+              @for (t of accountTypes; track t) {
+                <option [value]="t">{{ typeLabels[t] }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="openingBalance" class="form-label">Opening balance</label>
+            <div class="input-group has-validation">
+              <span class="input-group-text">₹</span>
+              <input id="openingBalance" type="text" inputmode="decimal" class="form-control"
+                     formControlName="openingBalance" autocomplete="off"
+                     [class.is-invalid]="showErrors(form.controls.openingBalance)" />
+              @if (form.controls.openingBalance.errors; as e) {
+                <div class="invalid-feedback">
+                  @if (e['required']) { Enter an opening balance (0 for none). }
+                  @else if (e['invalidAmount']) { Use rupees with at most 2 decimals, e.g. 2500.50. }
+                  @else if (e['maxAmount']) { The demo limit is ₹1,00,00,000. }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="col-12 col-md-6">
+          <label for="nickname" class="form-label">Nickname <span class="text-muted">(optional)</span></label>
+          <input id="nickname" type="text" class="form-control" formControlName="nickname"
+                 [class.is-invalid]="showErrors(form.controls.nickname)" />
+          @if (form.controls.nickname.errors; as e) {
+            <div class="invalid-feedback">
+              @if (e['maxlength']) { Maximum 30 characters. }
+              @else if (e['pattern']) { Use letters, digits, spaces, hyphens or apostrophes only. }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer bg-white d-flex justify-content-end gap-2">
+      <a routerLink="/accounts" class="btn btn-outline-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || saving()">
+        @if (saving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        {{ isEdit() ? 'Save changes' : 'Open account' }}
+      </button>
+    </div>
+  </form>
+}

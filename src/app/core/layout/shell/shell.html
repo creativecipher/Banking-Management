@@ -1,0 +1,16 @@
+<div class="app-shell">
+  <app-sidebar [open]="sidebarOpen()" (navigated)="closeSidebar()" />
+
+  @if (sidebarOpen()) {
+    <div class="backdrop" (click)="closeSidebar()"></div>
+  }
+
+  <div class="app-main">
+    <app-topbar (menuToggle)="toggleSidebar()" />
+    <main class="app-content">
+      <router-outlet />
+    </main>
+  </div>
+
+  <app-toast-container />
+</div>
